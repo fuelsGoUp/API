@@ -11,6 +11,8 @@ add_executable(TaskManager
     src/main.cpp
 
     src/apresentacao/controladores/ControladorTarefa.cpp
+
+    src/nucleo/aplicacao/servicos/ServicoTarefa.cpp
 )
 
 target_link_libraries(TaskManager
