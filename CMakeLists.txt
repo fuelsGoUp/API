@@ -4,7 +4,14 @@ project(TaskManager)
 
 set(CMAKE_CXX_STANDARD 20)
 
+find_package(libpqxx CONFIG REQUIRED)
+
 find_package(Crow CONFIG REQUIRED)
+
+target_link_libraries(TaskManager
+    Crow::Crow
+    libpqxx::pqxx
+)
 
 add_executable(TaskManager
 
