@@ -6,7 +6,7 @@ Desenvolver uma API REST para gerenciamento de tarefas utilizando C++, PostgreSQ
 
 ## Tecnologias Utilizadas
 
-* Linguagem: C++20
+* Linguagem: C++
 * Framework Web: Crow
 * Banco de Dados: PostgreSQL
 * Biblioteca de Acesso ao Banco: libpqxx
@@ -15,7 +15,7 @@ Desenvolver uma API REST para gerenciamento de tarefas utilizando C++, PostgreSQ
 
 ## Arquitetura
 
-O sistema segue uma arquitetura em camadas:
+O sistema segue uma arquitetura hexagonal de camadas, sendo elas:
 
 ### Apresentação
 
