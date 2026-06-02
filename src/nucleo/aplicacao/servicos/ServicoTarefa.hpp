@@ -1,11 +1,17 @@
 #pragma once
 
-#include "../../dominio/entidades/Tarefa.hpp"
-
-#include <vector>
+#include "../../dominio/repositorios/IRepositorioTarefa.hpp"
 
 class ServicoTarefa {
+private:
+
+    IRepositorioTarefa& repositorio;
+
 public:
+
+    explicit ServicoTarefa(
+        IRepositorioTarefa& repositorio
+    );
 
     std::vector<Tarefa> buscarTodas();
 };
