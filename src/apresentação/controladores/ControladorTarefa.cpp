@@ -1,36 +1,41 @@
 #include "ControladorTarefa.hpp"
 
-ServicoTarefa ControladorTarefa::servico;
+ControladorTarefa::ControladorTarefa(
+    ServicoTarefa& servico
+)
+    : servico(servico)
+{
+}
 
 void ControladorTarefa::registrarRotas(
     crow::SimpleApp& app
-) {
-
+)
+{
     CROW_ROUTE(app, "/tarefas")
-    ([](){
-
+    ([this]()
+    {
         auto tarefas =
             servico.buscarTodas();
 
         crow::json::wvalue resposta;
 
-        int index = 0;
+        int indice = 0;
 
-        for (const auto& tarefa : tarefas) {
-
-            resposta[index]["id"] =
+        for(const auto& tarefa : tarefas)
+        {
+            resposta[indice]["id"] =
                 tarefa.id;
 
-            resposta[index]["titulo"] =
+            resposta[indice]["titulo"] =
                 tarefa.titulo;
 
-            resposta[index]["descricao"] =
+            resposta[indice]["descricao"] =
                 tarefa.descricao;
 
-            resposta[index]["status"] =
+            resposta[indice]["status"] =
                 tarefa.status;
 
-            index++;
+            indice++;
         }
 
         return resposta;
