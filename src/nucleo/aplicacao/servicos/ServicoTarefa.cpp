@@ -1,18 +1,27 @@
 #include "ServicoTarefa.hpp"
 
+ServicoTarefa::ServicoTarefa(
+    IRepositorioTarefa& repositorio
+)
+    : repositorio(repositorio)
+{
+}
+
 std::vector<Tarefa>
-ServicoTarefa::buscarTodas() {
+ServicoTarefa::buscarTodas()
+{
+    return repositorio.buscarTodas();
+}#include "ServicoTarefa.hpp"
 
-    std::vector<Tarefa> tarefas;
+ServicoTarefa::ServicoTarefa(
+    IRepositorioTarefa& repositorio
+)
+    : repositorio(repositorio)
+{
+}
 
-    Tarefa tarefa;
-
-    tarefa.id = 1;
-    tarefa.titulo = "Estudar Crow";
-    tarefa.descricao = "Aprender rotas";
-    tarefa.status = "pendente";
-
-    tarefas.push_back(tarefa);
-
-    return tarefas;
+std::vector<Tarefa>
+ServicoTarefa::buscarTodas()
+{
+    return repositorio.buscarTodas();
 }
