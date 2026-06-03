@@ -20,4 +20,8 @@ public:
         );Tarefa buscarPorId(
         int id
     );
+
+    void atualizar(
+    const Tarefa& tarefa
+    );
 };
