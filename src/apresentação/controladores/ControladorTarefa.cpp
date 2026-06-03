@@ -85,4 +85,13 @@ void ControladorTarefa::registrarRotas(
 
         return crow::response(200);
     });
+
+    CROW_ROUTE(app, "/tarefas/<int>")
+    .methods(crow::HTTPMethod::DELETE)
+    ([this](int id)
+{
+        servico.remover(id);
+
+        return crow::response(204);
+});
 }
