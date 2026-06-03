@@ -13,11 +13,11 @@ lembretes:
 
 trocar o nome das pastas para sem caracteres especializados
 
-passos concluidos: 6
+passos concluidos: 7
 
 proximos passos
 
-crud
+usuario
 
 jwt
 
