@@ -8,7 +8,7 @@ PostgreSQL
 Compilador C++
 Cmake
 vcpkg
-pelo vcpkg, instalar crow e libpqxx no powershell
+pelo vcpkg, instalar crow e libpqxx no powershell do vcpkg
 e extensões c++ no visual studio code
 
 lembretes: 
