@@ -16,7 +16,7 @@ void ServicoUsuario::cadastrar(
 
 Usuario ServicoUsuario::login(
     const std::string& email,
-    const std::string& senha
+    const std::string& senha   
 )
 {
     Usuario usuario =
@@ -28,6 +28,9 @@ Usuario ServicoUsuario::login(
             "Senha invalida"
         );
     }
-
+    Usuario usuario = 
+        repositorio buscarPorEmail(
+            email
+        );
     return usuario;
 }
