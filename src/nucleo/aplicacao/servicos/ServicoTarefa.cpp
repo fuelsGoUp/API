@@ -35,3 +35,5 @@ ServicoTarefa::buscarPorId(
         id
     );
 }
+
+repositorio.atualizar(tarefa);
