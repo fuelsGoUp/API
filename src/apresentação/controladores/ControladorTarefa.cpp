@@ -29,14 +29,31 @@ void ControladorTarefa::registrarRotas(
             resposta[indice]["titulo"] =
                 tarefa.titulo;
 
-            resposta[indice]["descricao"] =
-                tarefa.descricao;
-
-            resposta[indice]["status"] =
-                tarefa.status;
-
             indice++;
         }
+
+        return resposta;
+    });
+
+    CROW_ROUTE(app, "/tarefas/<int>")
+    ([this](int id)
+    {
+        auto tarefa =
+            servico.buscarPorId(id);
+
+        crow::json::wvalue resposta;
+
+        resposta["id"] =
+            tarefa.id;
+
+        resposta["titulo"] =
+            tarefa.titulo;
+
+        resposta["descricao"] =
+            tarefa.descricao;
+
+        resposta["status"] =
+            tarefa.status;
 
         return resposta;
     });
