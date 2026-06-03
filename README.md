@@ -15,13 +15,11 @@ lembretes:
 
 trocar o nome das pastas para sem caracteres especializados
 
-passos concluidos: 7
+passos concluidos: 8
 
 proximos passos
 
 Tratamento de Erros
-
-usuario
 
 jwt
 
