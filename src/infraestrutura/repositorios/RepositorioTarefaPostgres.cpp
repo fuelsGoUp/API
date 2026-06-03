@@ -269,3 +269,29 @@ RepositorioTarefaPostgres::remover(
 
     transacao.commit();
 }
+
+void RepositorioTarefaPostgres::atualizar(
+    const Tarefa& tarefa
+)
+{
+    pqxx::work transacao(
+        banco.obterConexao()
+    );
+
+    transacao.exec_params(
+        "UPDATE tasks "
+        "SET title=$1, "
+        "description=$2, "
+        "status=$3, "
+        "assigned_user_id=$4 "
+        "WHERE id=$5",
+
+        tarefa.titulo,
+        tarefa.descricao,
+        tarefa.status,
+        tarefa.idUsuarioResponsavel,
+        tarefa.id
+    );
+
+    transacao.commit();
+}
