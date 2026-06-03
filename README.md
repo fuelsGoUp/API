@@ -1,5 +1,7 @@
 # API
 
+Programa ainda não foi testado, so escrita do codigo até agora
+
 são necessarios para rodar:
 
 PostgreSQL
