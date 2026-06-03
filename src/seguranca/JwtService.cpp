@@ -54,11 +54,11 @@ bool JwtService::validarToken(
 {
   try
   {
-    auto decoded = jw =
+    auto decoded =
       jwt::decode(token);
 
     auto verifier =
-      jwt verify::verify()
+      jwt::verify()
 
       .allow_algorithm(
         jwt::algorithm::hs256{
@@ -66,8 +66,8 @@ bool JwtService::validarToken(
         }
       )
 
-      with_issue(
-        "taskManager"
+      .with_issue(
+        "TaskManager"
       );
 
     verifier.verify(
@@ -75,8 +75,9 @@ bool JwtService::validarToken(
     );
 
     return true;
-  }
+    }
   catch(...)
   {
     return false;
   }
+};
