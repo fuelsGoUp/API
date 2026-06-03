@@ -57,4 +57,32 @@ void ControladorTarefa::registrarRotas(
 
         return resposta;
     });
+
+    CROW_ROUTE(app, "/tarefas/<int>")
+    .methods(crow::HTTPMethod::PUT)
+    ([this](const crow::request& req, int id)
+    {
+        auto body =
+            crow::json::load(req.body);
+
+        Tarefa tarefa;
+
+        tarefa.id = id;
+
+        tarefa.titulo =
+            body["titulo"].s();
+
+        tarefa.descricao =
+            body["descricao"].s();
+
+        tarefa.status =
+            body["status"].s();
+
+        tarefa.idUsuarioResponsavel =
+            body["idUsuarioResponsavel"].i();
+
+        servico.atualizar(tarefa);
+
+        return crow::response(200);
+    });
 }
