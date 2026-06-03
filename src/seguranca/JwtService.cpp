@@ -23,7 +23,7 @@ std::string JwtService::gerarToken(
       "TaskManager"
     )
 
-    set_payload_claim(
+    .set_payload_claim(
       "id",
       jwt::claim(
         std::to_string(
@@ -31,3 +31,19 @@ std::string JwtService::gerarToken(
         )
       )
     )
+
+    .set_payload_claim(
+      "email",
+      jwt::claim(
+        email
+      )
+    )
+
+    .sign(
+      jwt::algorithm::hs256{
+        segredo
+      }
+    );
+
+  return token;
+}
