@@ -30,4 +30,8 @@ public:
     void remover(
         int id
     ) override;
+
+    void atualizar(
+        const Tarefa& tarefa
+    ) override;
 };
