@@ -223,8 +223,8 @@ RepositorioTarefaPostgres::buscarPorId(
             id
         );
 
-    if (resultado.empty()) {
-
+    if(resultado.empty())
+    {
         throw std::runtime_error(
             "Tarefa nao encontrada"
         );
