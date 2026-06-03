@@ -17,5 +17,7 @@ public:
 
     virtual void remover(int id) = 0;
 
+    virtual void atualizar(const Tarefa& tarefa) = 0;
+
     virtual ~IRepositorioTarefa() = default;
 };
