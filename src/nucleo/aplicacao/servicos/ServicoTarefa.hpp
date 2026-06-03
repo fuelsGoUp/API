@@ -14,4 +14,10 @@ public:
     );
 
     std::vector<Tarefa> buscarTodas();
+
+    Tarefa buscarPorId(
+        int id
+        );Tarefa buscarPorId(
+        int id
+    );
 };
