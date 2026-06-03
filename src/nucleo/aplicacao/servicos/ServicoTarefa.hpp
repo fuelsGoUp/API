@@ -22,6 +22,10 @@ public:
     );
 
     void atualizar(
-    const Tarefa& tarefa
+        const Tarefa& tarefa
+    );
+
+    void remover(
+        int id
     );
 };
