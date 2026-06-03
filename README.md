@@ -19,6 +19,8 @@ passos concluidos: 7
 
 proximos passos
 
+Tratamento de Erros
+
 usuario
 
 jwt
