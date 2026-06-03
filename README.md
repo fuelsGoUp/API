@@ -21,7 +21,7 @@ proximos passos
 
 Tratamento de Erros
 
-jwt
+jwt (EM PROGRESSO)
 
 testes
 
