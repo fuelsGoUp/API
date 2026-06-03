@@ -25,3 +25,13 @@ ServicoTarefa::buscarTodas()
 {
     return repositorio.buscarTodas();
 }
+
+Tarefa
+ServicoTarefa::buscarPorId(
+    int id
+)
+{
+    return repositorio.buscarPorId(
+        id
+    );
+}
