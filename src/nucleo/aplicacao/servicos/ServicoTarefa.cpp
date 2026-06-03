@@ -37,3 +37,5 @@ ServicoTarefa::buscarPorId(
 }
 
 repositorio.atualizar(tarefa);
+
+repositorio.remover(id);
