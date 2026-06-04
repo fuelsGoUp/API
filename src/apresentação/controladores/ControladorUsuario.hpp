@@ -1,5 +1,8 @@
 #pragma once
 
+JwtService&
+jwtService;
+
 #include "../../nucleo/aplicacao/servicos/ServicoUsuario.hpp"
 
 #include <crow.h>
