@@ -64,8 +64,14 @@ void ControladorUsuario::registrarRotas(
         resposta["nome"] =
             usuario.nome;
 
-        resposta["email"] =
-            usuario.email;
+        std::string token =
+          jwtService.gerarToken(
+          usuario.id,
+          usuario.email
+    );
+
+        resposta["token"] =
+          token;
 
         return resposta;
     });
