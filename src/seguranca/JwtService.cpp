@@ -3,81 +3,47 @@
 #include <jwt-cpp/jwt.h>
 
 JwtService::JwtService()
-  : segredo(
-    "ULTRA_MEGA_SEGREDO"
-)
+    : segredo(
+        "SEGREDO_SUPER_SECRETO_2026"
+    )
 {
 }
 
 std::string JwtService::gerarToken(
-  int idUsuario,
-  const std::string& email
+    int idUsuario,
+    const std::string& email
 )
 {
-  auto token =
-    jwt::create()
+    auto token =
+        jwt::create()
 
-    .set_type("JWT")
+        .set_type("JWT")
 
-    .set_issuer(
-      "TaskManager"
-    )
-
-    .set_payload_claim(
-      "id",
-      jwt::claim(
-        std::to_string(
-          idUsuario
+        .set_issuer(
+            "TaskManager"
         )
-      )
-    )
 
-    .set_payload_claim(
-      "email",
-      jwt::claim(
-        email
-      )
-    )
+        .set_payload_claim(
+            "id",
+            jwt::claim(
+                std::to_string(
+                    idUsuario
+                )
+            )
+        )
 
-    .sign(
-      jwt::algorithm::hs256{
-        segredo
-      }
-    );
+        .set_payload_claim(
+            "email",
+            jwt::claim(
+                email
+            )
+        )
 
-  return token;
+        .sign(
+            jwt::algorithm::hs256{
+                segredo
+            }
+        );
+
+    return token;
 }
-
-bool JwtService::validarToken(
-  const std::string& token;
-)
-{
-  try
-  {
-    auto decoded =
-      jwt::decode(token);
-
-    auto verifier =
-      jwt::verify()
-
-      .allow_algorithm(
-        jwt::algorithm::hs256{
-          segredo
-        }
-      )
-
-      .with_issue(
-        "TaskManager"
-      );
-
-    verifier.verify(
-      decoded
-    );
-
-    return true;
-    }
-  catch(...)
-  {
-    return false;
-  }
-};
