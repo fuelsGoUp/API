@@ -16,8 +16,9 @@ private:
 public:
 
     explicit ControladorUsuario(
-        ServicoUsuario& servico
-    );
+    ServicoUsuario& servico,
+    JwtService& jwtService
+);
 
     void registrarRotas(
         crow::SimpleApp& app
