@@ -47,3 +47,37 @@ std::string JwtService::gerarToken(
 
     return token;
 }
+
+bool JwtService::validarToken(
+    const std::string& token
+)
+{
+    try
+    {
+        auto decoded =
+            jwt::decode(token);
+
+        auto verifier =
+            jwt::verify()
+
+            .allow_algorithm(
+                jwt::algorithm::hs256{
+                    segredo
+                }
+            )
+
+            .with_issuer(
+                "TaskManager"
+            );
+
+        verifier.verify(
+            decoded
+        );
+
+        return true;
+    }
+    catch(...)
+    {
+        return false;
+    }
+}
