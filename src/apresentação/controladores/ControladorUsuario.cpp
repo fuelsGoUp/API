@@ -2,9 +2,11 @@
 
 ControladorUsuario::
 ControladorUsuario(
-    ServicoUsuario& servico
+    ServicoUsuario& servico,
+    JwtService& jwtService
 )
-    : servico(servico)
+    : servico(servico),
+      jwtService(jwtService)
 {
 }
 
