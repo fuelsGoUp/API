@@ -11,25 +11,22 @@
 #include "apresentacao/controladores/ControladorTarefa.hpp"
 #include "apresentacao/controladores/ControladorUsuario.hpp"
 
+#include "seguranca/JwtService.hpp"
+#include "seguranca/MiddlewareJwt.hpp"
+
 int main()
 {
     try
     {
         crow::SimpleApp app;
 
-        // Banco de dados
-
         BancoDados banco;
-
-        // Repositórios
 
         RepositorioTarefaPostgres
             repositorioTarefa(banco);
 
         RepositorioUsuarioPostgres
             repositorioUsuario(banco);
-
-        // Serviços
 
         ServicoTarefa
             servicoTarefa(
@@ -41,33 +38,30 @@ int main()
                 repositorioUsuario
             );
 
-        // Controladores
+        JwtService jwtService;
+
+        MiddlewareJwt
+            middlewareJwt(
+                jwtService
+            );
 
         ControladorTarefa
             controladorTarefa(
-                servicoTarefa
+                servicoTarefa,
+                middlewareJwt
             );
 
         ControladorUsuario
             controladorUsuario(
-                servicoUsuario
+                servicoUsuario,
+                jwtService
             );
-
-        // Rotas
 
         controladorTarefa
             .registrarRotas(app);
 
         controladorUsuario
             .registrarRotas(app);
-
-        std::cout
-            << "Servidor iniciado em:"
-            << std::endl;
-
-        std::cout
-            << "http://localhost:18080"
-            << std::endl;
 
         app.port(18080)
            .multithreaded()
@@ -76,7 +70,6 @@ int main()
     catch(const std::exception& e)
     {
         std::cerr
-            << "Erro: "
             << e.what()
             << std::endl;
 
