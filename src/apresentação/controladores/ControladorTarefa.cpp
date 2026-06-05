@@ -1,9 +1,12 @@
 #include "ControladorTarefa.hpp"
 
-ControladorTarefa::ControladorTarefa(
-    ServicoTarefa& servico
+ControladorTarefa::
+ControladorTarefa(
+    ServicoTarefa& servico,
+    MiddlewareJwt& middlewareJwt
 )
-    : servico(servico)
+    : servico(servico),
+      middlewareJwt(middlewareJwt)
 {
 }
 
