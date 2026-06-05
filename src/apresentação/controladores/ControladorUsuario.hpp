@@ -13,6 +13,7 @@ class ControladorUsuario
 private:
 
     ServicoUsuario& servico;
+    JwtService& jwtService;
 
 public:
 
