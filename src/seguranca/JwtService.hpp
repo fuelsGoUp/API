@@ -20,4 +20,8 @@ public:
     bool validarToken(
         const std::string& token
     );
+
+    int obterIdUsuario(
+        const std::string& token
+    );
 };
