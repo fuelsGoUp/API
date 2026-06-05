@@ -4,6 +4,7 @@ JwtService&
 jwtService;
 
 #include "../../nucleo/aplicacao/servicos/ServicoUsuario.hpp"
+#include "../../seguranca/JwtService.hpp"
 
 #include <crow.h>
 
