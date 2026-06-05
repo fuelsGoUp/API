@@ -36,6 +36,15 @@ ServicoTarefa::buscarPorId(
     );
 }
 
+void ServicoTarefa::salvar(
+    const Tarefa& tarefa
+)
+{
+    repositorio.salvar(
+        tarefa
+    );
+}
+
 repositorio.atualizar(tarefa);
 
 repositorio.remover(id);
