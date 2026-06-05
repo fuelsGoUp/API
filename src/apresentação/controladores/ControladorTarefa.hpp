@@ -13,9 +13,10 @@ private:
 
 public:
 
-    explicit ControladorTarefa(
-        ServicoTarefa& servico
-    );
+    ControladorTarefa(
+    ServicoTarefa& servico,
+    MiddlewareJwt& middlewareJwt
+);
 
     void registrarRotas(
         crow::SimpleApp& app
