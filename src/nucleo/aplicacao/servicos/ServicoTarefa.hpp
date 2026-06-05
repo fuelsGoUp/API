@@ -2,7 +2,8 @@
 
 #include "../../dominio/repositorios/IRepositorioTarefa.hpp"
 
-class ServicoTarefa {
+class ServicoTarefa
+{
 private:
 
     IRepositorioTarefa& repositorio;
@@ -13,11 +14,13 @@ public:
         IRepositorioTarefa& repositorio
     );
 
+    void salvar(
+        const Tarefa& tarefa
+    );
+
     std::vector<Tarefa> buscarTodas();
 
     Tarefa buscarPorId(
-        int id
-        );Tarefa buscarPorId(
         int id
     );
 
