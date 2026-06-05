@@ -14,6 +14,8 @@ void ControladorTarefa::registrarRotas(
     crow::SimpleApp& app
 )
 {
+    // GET /tarefas
+
     CROW_ROUTE(app, "/tarefas")
     ([this]()
     {
@@ -32,11 +34,19 @@ void ControladorTarefa::registrarRotas(
             resposta[indice]["titulo"] =
                 tarefa.titulo;
 
+            resposta[indice]["descricao"] =
+                tarefa.descricao;
+
+            resposta[indice]["status"] =
+                tarefa.status;
+
             indice++;
         }
 
         return resposta;
     });
+
+    // GET /tarefas/<id>
 
     CROW_ROUTE(app, "/tarefas/<int>")
     ([this](int id)
@@ -61,19 +71,28 @@ void ControladorTarefa::registrarRotas(
         return resposta;
     });
 
+    // PUT /tarefas/<id>
+
     CROW_ROUTE(app, "/tarefas/<int>")
     .methods(crow::HTTPMethod::PUT)
-    ([this](const crow::request& req, int id)
-{
-    if(!middlewareJwt.autorizado(req))
+    ([this]
+    (
+        const crow::request& req,
+        int id
+    )
     {
-        return crow::response(
-            401,
-            "Nao autorizado"
-        );
-    }
+        if(!middlewareJwt.autorizado(req))
+        {
+            return crow::response(
+                401,
+                "Nao autorizado"
+            );
+        }
+
         auto body =
-            crow::json::load(req.body);
+            crow::json::load(
+                req.body
+            );
 
         Tarefa tarefa;
 
@@ -91,24 +110,39 @@ void ControladorTarefa::registrarRotas(
         tarefa.idUsuarioResponsavel =
             body["idUsuarioResponsavel"].i();
 
-        servico.atualizar(tarefa);
+        servico.atualizar(
+            tarefa
+        );
 
-        return crow::response(200);
+        return crow::response(
+            200
+        );
     });
+
+    // DELETE /tarefas/<id>
 
     CROW_ROUTE(app, "/tarefas/<int>")
     .methods(crow::HTTPMethod::DELETE)
-    ([this](const crow::request& req, int id)
-{
-    if(!middlewareJwt.autorizado(req))
+    ([this]
+    (
+        const crow::request& req,
+        int id
+    )
     {
-        return crow::response(
-            401,
-            "Nao autorizado"
-        );
-    }
-        servico.remover(id);
+        if(!middlewareJwt.autorizado(req))
+        {
+            return crow::response(
+                401,
+                "Nao autorizado"
+            );
+        }
 
-        return crow::response(204);
-});
+        servico.remover(
+            id
+        );
+
+        return crow::response(
+            204
+        );
+    });
 }
