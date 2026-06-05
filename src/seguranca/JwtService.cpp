@@ -14,12 +14,20 @@ std::string JwtService::gerarToken(
     const std::string& email
 )
 {
-    return jwt::create()
+    using namespace std::chrono;
+
+    auto token =
+        jwt::create()
 
         .set_type("JWT")
 
         .set_issuer(
             "TaskManager"
+        )
+
+        .set_expires_at(
+            system_clock::now()
+            + hours(24)
         )
 
         .set_payload_claim(
@@ -43,6 +51,8 @@ std::string JwtService::gerarToken(
                 segredo
             }
         );
+
+    return token;
 }
 
 bool JwtService::validarToken(
