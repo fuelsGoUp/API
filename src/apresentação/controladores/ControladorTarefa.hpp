@@ -2,6 +2,8 @@
 
 #include "crow.h"
 
+#include "../../seguranca/MiddlewareJwt.hpp"
+
 #include "../../nucleo/aplicacao/servicos/ServicoTarefa.hpp"
 
 class ControladorTarefa {
@@ -28,6 +30,7 @@ class ControladorTarefa {
 private:
 
     ServicoTarefa& servico;
+    MiddlewareJwt& middlewareJwt;
 
 public:
 
