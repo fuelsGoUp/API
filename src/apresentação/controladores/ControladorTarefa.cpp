@@ -64,7 +64,14 @@ void ControladorTarefa::registrarRotas(
     CROW_ROUTE(app, "/tarefas/<int>")
     .methods(crow::HTTPMethod::PUT)
     ([this](const crow::request& req, int id)
+{
+    if(!middlewareJwt.autorizado(req))
     {
+        return crow::response(
+            401,
+            "Nao autorizado"
+        );
+    }
         auto body =
             crow::json::load(req.body);
 
