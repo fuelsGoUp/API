@@ -14,8 +14,7 @@ std::string JwtService::gerarToken(
     const std::string& email
 )
 {
-    auto token =
-        jwt::create()
+    return jwt::create()
 
         .set_type("JWT")
 
@@ -44,8 +43,6 @@ std::string JwtService::gerarToken(
                 segredo
             }
         );
-
-    return token;
 }
 
 bool JwtService::validarToken(
@@ -71,8 +68,7 @@ bool JwtService::validarToken(
             );
 
         verifier.verify(
-            decoded
-        );
+            decoded);
 
         return true;
     }
@@ -80,4 +76,18 @@ bool JwtService::validarToken(
     {
         return false;
     }
+}
+
+int JwtService::obterIdUsuario(
+    const std::string& token
+)
+{
+    auto decoded =
+        jwt::decode(token);
+
+    return std::stoi(
+        decoded
+            .get_payload_claim("id")
+            .as_string()
+    );
 }
