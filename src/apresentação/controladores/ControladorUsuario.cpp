@@ -60,12 +60,6 @@ void ControladorUsuario::registrarRotas(
 
         crow::json::wvalue resposta;
 
-        resposta["id"] =
-            usuario.id;
-
-        resposta["nome"] =
-            usuario.nome;
-
         std::string token =
           jwtService.gerarToken(
           usuario.id,
