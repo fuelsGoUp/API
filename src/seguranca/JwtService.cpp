@@ -1,6 +1,6 @@
 #include "JwtService.hpp"
 
-#include <jwt-cpp/jwt.h>
+#include <jwt-cpp/traits/kazuho-picojson/defaults.h>
 
 JwtService::JwtService()
     : segredo(

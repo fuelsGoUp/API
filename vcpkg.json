@@ -1,0 +1,11 @@
+{
+  "name": "taskmanager",
+  "version": "0.1.0",
+  "dependencies": [
+    "crow",
+    "jwt-cpp",
+    "libpqxx",
+    "gtest",
+    "picojson"
+  ]
+}
