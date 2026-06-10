@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Crow     CONFIG REQUIRED)
 find_package(libpqxx  CONFIG REQUIRED)
 find_package(jwt-cpp  CONFIG REQUIRED)
+find_package(spdlog   CONFIG REQUIRED)
 
 add_executable(TaskManager
     main.cpp
@@ -29,6 +30,7 @@ target_link_libraries(TaskManager
     Crow::Crow
     libpqxx::pqxx
     jwt-cpp::jwt-cpp
+    spdlog::spdlog
 )
 
 find_package(GTest CONFIG REQUIRED)
@@ -56,6 +58,7 @@ target_link_libraries(TaskManagerTests
     GTest::gmock
     Crow::Crow
     jwt-cpp::jwt-cpp
+    spdlog::spdlog
 )
 
 

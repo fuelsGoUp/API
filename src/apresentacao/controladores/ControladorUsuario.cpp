@@ -1,7 +1,9 @@
 #include "ControladorUsuario.hpp"
 
-ControladorUsuario::
-ControladorUsuario(
+#include "../../nucleo/dominio/excecoes/Excecoes.hpp"
+#include "../../infraestrutura/logger/Logger.hpp"
+
+ControladorUsuario::ControladorUsuario(
     ServicoUsuario& servico,
     JwtService& jwtService
 )
@@ -18,57 +20,102 @@ void ControladorUsuario::registrarRotas(
     .methods(crow::HTTPMethod::POST)
     ([this](const crow::request& req)
     {
-        auto json =
-            crow::json::load(
-                req.body
-            );
+        Logger::info("POST /register");
 
-        Usuario usuario;
+        try
+        {
+            auto json = crow::json::load(req.body);
 
-        usuario.nome =
-            json["nome"].s();
+            if (!json)
+            {
+                return crow::response(400, "JSON invalido");
+            }
 
-        usuario.email =
-            json["email"].s();
+            if (!json.has("nome") || !json.has("email") || !json.has("senha"))
+            {
+                return crow::response(400, "Campos obrigatorios: nome, email, senha");
+            }
 
-        usuario.senha =
-            json["senha"].s();
+            Usuario usuario;
+            usuario.nome  = json["nome"].s();
+            usuario.email = json["email"].s();
+            usuario.senha = json["senha"].s();
 
-        servico.cadastrar(
-            usuario
-        );
+            servico.cadastrar(usuario);
 
-        return crow::response(
-            201
-        );
+            return crow::response(201);
+        }
+        catch (const ExcecaoDadosInvalidos& e)
+        {
+            return crow::response(400, e.what());
+        }
+        catch (const ExcecaoConflito& e)
+        {
+            Logger::warn(std::string("POST /register - conflito: ") + e.what());
+            return crow::response(409, e.what());
+        }
+        catch (const std::exception& e)
+        {
+            Logger::error(std::string("POST /register - erro interno: ") + e.what());
+            return crow::response(500, "Erro interno do servidor");
+        }
     });
 
     CROW_ROUTE(app, "/login")
     .methods(crow::HTTPMethod::POST)
     ([this](const crow::request& req)
     {
-        auto json =
-            crow::json::load(
-                req.body
-            );
+        Logger::info("POST /login");
 
-        Usuario usuario =
-            servico.login(
+        try
+        {
+            auto json = crow::json::load(req.body);
+
+            if (!json)
+            {
+                return crow::response(400, "JSON invalido");
+            }
+
+            if (!json.has("email") || !json.has("senha"))
+            {
+                return crow::response(400, "Campos obrigatorios: email, senha");
+            }
+
+            Usuario usuario = servico.login(
                 json["email"].s(),
                 json["senha"].s()
             );
 
-        crow::json::wvalue resposta;
+            std::string token = jwtService.gerarToken(
+                usuario.id,
+                usuario.email
+            );
 
-        std::string token =
-          jwtService.gerarToken(
-          usuario.id,
-          usuario.email
-    );
+            crow::json::wvalue resposta;
+            resposta["token"] = token;
 
-        resposta["token"] =
-          token;
+            Logger::info("Login bem-sucedido: " + usuario.email);
 
-        return resposta;
+            return crow::response(200, resposta);
+        }
+        catch (const ExcecaoDadosInvalidos& e)
+        {
+            return crow::response(400, e.what());
+        }
+        catch (const ExcecaoNaoAutorizado& e)
+        {
+            Logger::warn("POST /login - credenciais invalidas");
+            return crow::response(401, e.what());
+        }
+        catch (const ExcecaoNaoEncontrado&)
+        {
+            Logger::warn("POST /login - credenciais invalidas");
+            return crow::response(401, "Credenciais invalidas");
+        }
+        catch (const std::exception& e)
+        {
+            Logger::error(std::string("POST /login - erro interno: ") + e.what());
+            return crow::response(500, "Erro interno do servidor");
+        }
     });
 }

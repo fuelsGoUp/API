@@ -6,6 +6,7 @@
     "jwt-cpp",
     "libpqxx",
     "gtest",
-    "picojson"
+    "picojson",
+    "spdlog"
   ]
 }
