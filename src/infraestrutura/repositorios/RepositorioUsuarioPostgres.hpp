@@ -16,11 +16,11 @@ public:
         BancoDados& banco
     );
 
-    void salvar(
+    void salvarUsuario(
         const Usuario& usuario
     ) override;
 
-    Usuario buscarPorEmail(
+    Usuario buscarUsuarioPorEmail(
         const std::string& email
     ) override;
 };

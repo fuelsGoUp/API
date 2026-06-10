@@ -1,18 +1,18 @@
 #pragma once
 
+#include <string>
 #include "../entidades/Usuario.hpp"
 
-class IRepositorioUsuario
-{
+class IRepositorioUsuario {
 public:
 
     virtual ~IRepositorioUsuario() = default;
 
-    virtual void salvar(
+    virtual void salvarUsuario(
         const Usuario& usuario
     ) = 0;
 
-    virtual Usuario buscarPorEmail(
+    virtual Usuario buscarUsuarioPorEmail(
         const std::string& email
     ) = 0;
 };

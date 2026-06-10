@@ -10,7 +10,7 @@ RepositorioTarefaPostgres(
 {
 }
 
-void RepositorioTarefaPostgres::salvar(
+void RepositorioTarefaPostgres::salvarTarefa(
     const Tarefa& tarefa
 ) {
 
@@ -33,7 +33,7 @@ void RepositorioTarefaPostgres::salvar(
 }
 
 std::vector<Tarefa>
-RepositorioTarefaPostgres::buscarTodas()
+RepositorioTarefaPostgres::buscarTodasTarefas()
 {
     pqxx::work transacao(
         banco.obterConexao()
@@ -72,7 +72,7 @@ RepositorioTarefaPostgres::buscarTodas()
 }
 
 Tarefa
-RepositorioTarefaPostgres::buscarPorId(
+RepositorioTarefaPostgres::buscarTarefaPorId(
     int id
 )
 {
@@ -118,7 +118,7 @@ RepositorioTarefaPostgres::buscarPorId(
 }
 
 void
-RepositorioTarefaPostgres::remover(
+RepositorioTarefaPostgres::removerTarefa(
     int id
 )
 {
@@ -145,7 +145,7 @@ RepositorioTarefaPostgres(
 {
 }
 
-void RepositorioTarefaPostgres::salvar(
+void RepositorioTarefaPostgres::salvarTarefa(
     const Tarefa& tarefa
 ) {
 
@@ -168,7 +168,7 @@ void RepositorioTarefaPostgres::salvar(
 }
 
 std::vector<Tarefa>
-RepositorioTarefaPostgres::buscarTodas()
+RepositorioTarefaPostgres::buscarTodasTarefas()
 {
     pqxx::work transacao(
         banco.obterConexao()
