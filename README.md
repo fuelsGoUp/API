@@ -20,6 +20,8 @@ API REST para gerenciamento de tarefas com autenticação JWT, escrita em C++20 
 
 ### 1. Instalar o vcpkg (apenas na primeira vez)
 
+A instalação dos pacotes deve ser feita pelo powershell.
+
 ```powershell
 git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
 C:\vcpkg\bootstrap-vcpkg.bat -disableMetrics
