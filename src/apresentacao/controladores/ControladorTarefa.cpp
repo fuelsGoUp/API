@@ -16,6 +16,51 @@ void ControladorTarefa::registrarRotas(
     crow::SimpleApp& app
 )
 {
+    // POST /tarefas
+
+    CROW_ROUTE(app, "/tarefas")
+    .methods(crow::HTTPMethod::POST)
+    ([this](const crow::request& req)
+    {
+        Logger::info("POST /tarefas");
+
+        if (!middlewareJwt.autorizado(req))
+        {
+            Logger::warn("POST /tarefas - nao autorizado");
+            return crow::response(401, "Nao autorizado");
+        }
+
+        try
+        {
+            auto body = crow::json::load(req.body);
+
+            if (!body)
+                return crow::response(400, "JSON invalido");
+
+            if (!body.has("titulo") || !body.has("descricao") || !body.has("status") || !body.has("idUsuarioResponsavel"))
+                return crow::response(400, "Campos obrigatorios: titulo, descricao, status, idUsuarioResponsavel");
+
+            Tarefa tarefa;
+            tarefa.titulo               = body["titulo"].s();
+            tarefa.descricao            = body["descricao"].s();
+            tarefa.status               = body["status"].s();
+            tarefa.idUsuarioResponsavel = body["idUsuarioResponsavel"].i();
+
+            servico.salvar(tarefa);
+
+            return crow::response(201);
+        }
+        catch (const ExcecaoDadosInvalidos& e)
+        {
+            return crow::response(400, e.what());
+        }
+        catch (const std::exception& e)
+        {
+            Logger::error(std::string("POST /tarefas - erro interno: ") + e.what());
+            return crow::response(500, "Erro interno do servidor");
+        }
+    });
+
     // GET /tarefas
 
     CROW_ROUTE(app, "/tarefas")
@@ -137,7 +182,7 @@ void ControladorTarefa::registrarRotas(
     // DELETE /tarefas/<id>
 
     CROW_ROUTE(app, "/tarefas/<int>")
-    .methods(crow::HTTPMethod::DELETE)
+    .methods(crow::HTTPMethod::Delete)
     ([this](const crow::request& req, int id)
     {
         Logger::info("DELETE /tarefas/" + std::to_string(id));

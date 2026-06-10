@@ -1,13 +1,17 @@
 #pragma once
 
 #include <pqxx/pqxx>
+#include <optional>
+#include <string>
 
 class BancoDados {
 private:
-    pqxx::connection conexao;
+    std::string connString;
+    std::optional<pqxx::connection> conexao;
 
 public:
     BancoDados();
 
     pqxx::connection& obterConexao();
+    bool testarConexao();
 };
