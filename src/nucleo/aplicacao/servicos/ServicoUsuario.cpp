@@ -1,4 +1,5 @@
 #include "ServicoUsuario.hpp"
+#include <stdexcept>
 
 ServicoUsuario::ServicoUsuario(
     IRepositorioUsuario& repositorio
@@ -11,16 +12,16 @@ void ServicoUsuario::cadastrar(
     const Usuario& usuario
 )
 {
-    repositorio.salvar(usuario);
+    repositorio.salvarUsuario(usuario);
 }
 
 Usuario ServicoUsuario::login(
     const std::string& email,
-    const std::string& senha   
+    const std::string& senha
 )
 {
     Usuario usuario =
-        repositorio.buscarPorEmail(email);
+        repositorio.buscarUsuarioPorEmail(email);
 
     if(usuario.senha != senha)
     {
@@ -28,9 +29,6 @@ Usuario ServicoUsuario::login(
             "Senha invalida"
         );
     }
-    Usuario usuario = 
-        repositorio buscarPorEmail(
-            email
-        );
+
     return usuario;
 }

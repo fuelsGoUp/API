@@ -16,22 +16,22 @@ public:
         BancoDados& banco
     );
 
-    void salvar(
+    void salvarTarefa(
         const Tarefa& tarefa
     ) override;
 
     std::vector<Tarefa>
-    buscarTodas() override;
+    buscarTodasTarefas() override;
 
-    Tarefa buscarPorId(
+    Tarefa buscarTarefaPorId(
         int id
     ) override;
 
-    void remover(
+    void removerTarefa(
         int id
     ) override;
 
-    void atualizar(
+    void atualizarTarefa(
         const Tarefa& tarefa
     ) override;
 };

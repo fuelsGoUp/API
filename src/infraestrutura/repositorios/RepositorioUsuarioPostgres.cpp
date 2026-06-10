@@ -8,7 +8,7 @@ RepositorioUsuarioPostgres(
 {
 }
 
-void RepositorioUsuarioPostgres::salvar(
+void RepositorioUsuarioPostgres::salvarUsuario(
     const Usuario& usuario
 )
 {
@@ -30,7 +30,7 @@ void RepositorioUsuarioPostgres::salvar(
 }
 
 Usuario
-RepositorioUsuarioPostgres::buscarPorEmail(
+RepositorioUsuarioPostgres::buscarUsuarioPorEmail(
     const std::string& email
 )
 {
