@@ -1,5 +1,6 @@
 #include "ServicoUsuario.hpp"
-#include <stdexcept>
+
+#include "../../../nucleo/dominio/excecoes/Excecoes.hpp"
 
 ServicoUsuario::ServicoUsuario(
     IRepositorioUsuario& repositorio
@@ -12,6 +13,11 @@ void ServicoUsuario::cadastrar(
     const Usuario& usuario
 )
 {
+    if (usuario.nome.empty() || usuario.email.empty() || usuario.senha.empty())
+    {
+        throw ExcecaoDadosInvalidos("Nome, email e senha sao obrigatorios");
+    }
+
     repositorio.salvarUsuario(usuario);
 }
 
@@ -20,14 +26,16 @@ Usuario ServicoUsuario::login(
     const std::string& senha
 )
 {
-    Usuario usuario =
-        repositorio.buscarUsuarioPorEmail(email);
-
-    if(usuario.senha != senha)
+    if (email.empty() || senha.empty())
     {
-        throw std::runtime_error(
-            "Senha invalida"
-        );
+        throw ExcecaoDadosInvalidos("Email e senha sao obrigatorios");
+    }
+
+    Usuario usuario = repositorio.buscarUsuarioPorEmail(email);
+
+    if (usuario.senha != senha)
+    {
+        throw ExcecaoNaoAutorizado("Credenciais invalidas");
     }
 
     return usuario;

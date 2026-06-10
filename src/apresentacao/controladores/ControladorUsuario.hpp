@@ -1,8 +1,5 @@
 #pragma once
 
-JwtService&
-jwtService;
-
 #include "../../nucleo/aplicacao/servicos/ServicoUsuario.hpp"
 #include "../../seguranca/JwtService.hpp"
 
@@ -18,10 +15,9 @@ private:
 public:
 
     ControladorUsuario(
-    ServicoUsuario& servico,
-    JwtService& jwtService
-);
-
+        ServicoUsuario& servico,
+        JwtService& jwtService
+    );
 
     void registrarRotas(
         crow::SimpleApp& app

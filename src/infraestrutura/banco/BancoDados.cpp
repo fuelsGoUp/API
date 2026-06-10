@@ -1,4 +1,5 @@
 #include "BancoDados.hpp"
+#include "../logger/Logger.hpp"
 
 BancoDados::BancoDados()
     : conexao(
@@ -9,10 +10,11 @@ BancoDados::BancoDados()
         "password=SUA_SENHA"
     )
 {
+    Logger::info("Conexao com o banco de dados estabelecida");
 }
 
 pqxx::connection&
-BancoDados::obterConexao() {
-
+BancoDados::obterConexao()
+{
     return conexao;
 }
