@@ -106,21 +106,77 @@ Authorization: Bearer <token>
 
 ---
 
-## Compilar e executar os testes
+## Suíte de testes
+
+O projeto usa **Google Test + Google Mock** como framework de testes. Os testes cobrem as camadas de domínio, aplicação e segurança sem depender de banco de dados.
+
+### 1. Compilar o binário de testes
 
 ```powershell
-# Compilar o binário de testes
 cmake --build build --target TaskManagerTests --parallel
+```
 
-# Executar todos os testes
+O binário gerado fica em `build/TaskManagerTests.exe`.
+
+### 2. Executar todos os testes
+
+```powershell
 ctest --test-dir build --output-on-failure
 ```
 
-Resultado esperado:
+Saída esperada:
+
 ```
+Test project C:/Users/.../build
+ 1/27 Test  #1: MiddlewareJwtTest.SemHeaderRetornaFalso ............... Passed
+ 2/27 Test  #2: MiddlewareJwtTest.HeaderSemBearerRetornaFalso ......... Passed
+...
+27/27 Test #27: UsuarioTest.AtributosPodemSerAtribuidos ............... Passed
+
 100% tests passed, 0 tests failed out of 27
 Total Test time (real) =   0.38 sec
 ```
+
+### 3. Ver detalhes de cada teste (modo verbose)
+
+```powershell
+ctest --test-dir build --output-on-failure -V
+```
+
+Exibe o nome completo, status e tempo de cada caso de teste individualmente.
+
+### 4. Filtrar por grupo ou nome
+
+```powershell
+# Apenas testes de JWT
+ctest --test-dir build -R JwtServiceTest --output-on-failure
+
+# Apenas testes do middleware
+ctest --test-dir build -R MiddlewareJwtTest --output-on-failure
+
+# Apenas testes de serviços
+ctest --test-dir build -R "ServicoTarefaTest|ServicoUsuarioTest" --output-on-failure
+```
+
+O padrão passado em `-R` é uma expressão regular aplicada ao nome do teste.
+
+### 5. Recompilar e testar em um único comando
+
+Útil após alterar o código fonte:
+
+```powershell
+cmake --build build --target TaskManagerTests --parallel && ctest --test-dir build --output-on-failure
+```
+
+### O que cada arquivo de teste cobre
+
+| Arquivo | Classe testada | Casos |
+|---|---|---|
+| `tests/test_entidades.cpp` | `Tarefa`, `Usuario` | Construtores e atribuição de atributos |
+| `tests/test_servico_tarefa.cpp` | `ServicoTarefa` | salvar, buscar, atualizar e remover via mock |
+| `tests/test_servico_usuario.cpp` | `ServicoUsuario` | cadastrar, login correto, senha errada, email inexistente |
+| `tests/test_jwt_service.cpp` | `JwtService` | gerar token, validar token válido/inválido/corrompido, extrair ID |
+| `tests/test_middleware_jwt.cpp` | `MiddlewareJwt` | sem header, sem Bearer, token inválido, token válido |
 
 ### Cobertura de código (opcional — requer GCC + lcov)
 
