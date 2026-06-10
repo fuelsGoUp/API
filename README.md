@@ -1,28 +1,43 @@
-# API
+# API de Gestão de tarefas
 
-Programa ainda não foi testado, so escrita do codigo até agora
+Para usar esta API é necessario ter em sua maquina:
 
-são necessarios para rodar:
+* PostgreSQL
+* Compilador C++
+* Cmake
+* vcpkg
+* instalar crow e libpqxx no powershell pelo vcpkg
+* extensões c++ no visual studio code
+* git para clonar o projeto
 
-PostgreSQL
-Compilador C++
-Cmake
-vcpkg
-pelo vcpkg, instalar crow e libpqxx no powershell do vcpkg
-e extensões c++ no visual studio code
+Para instalar as dependencias pelo vcpkg, basta usar o comando `vcpkg install crow lobpqxx` no poweshell.
 
-lembretes: 
+Clone a API com git e entrar na pasta da API:
 
-trocar o nome das pastas para sem caracteres especializados
+`git clone https://github.com/fuelsGoUp/API`
 
-passos concluidos: 8
+`cd API`
 
-proximos passos
+Então podemos compilar o projeto usando cmake:
 
-Tratamento de Erros
+`cmake --build build`
 
-jwt (EM PROGRESSO)
+Este comando vai criar uma pasta build, para separar o .exe do projeto, deixando tudo mais organizado para alterações caso seja necessário:
 
-testes
+`cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake` Ou o caminho do vcpkg até o vcpkg.cmake que você tenha feito a instalação.
 
-documentação 
+Então poderemos mandar o cmake compilar:
+
+`cmake --build build`
+
+E podemos rodar pela linha de comando no diretorio API:
+
+`.\build\Debug\TaskManager.exe` ou `.\build\TaskManager.exe` caso não tenha a pasta debug.
+
+
+
+
+
+
+
+
