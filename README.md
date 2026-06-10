@@ -61,7 +61,9 @@ A API sobe na porta **18080**.
 
 ## Banco de dados
 
-Crie o banco e as tabelas antes de rodar a aplicação:
+### Criar banco e tabelas
+
+Conecte-se como superusuário e execute:
 
 ```sql
 CREATE DATABASE taskdb;
@@ -69,22 +71,128 @@ CREATE DATABASE taskdb;
 \c taskdb
 
 CREATE TABLE users (
-    id    SERIAL PRIMARY KEY,
-    nome  TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    senha TEXT NOT NULL
+    id    SERIAL       PRIMARY KEY,
+    nome  VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE tasks (
-    id                     SERIAL PRIMARY KEY,
-    titulo                 TEXT NOT NULL,
-    descricao              TEXT,
-    status                 TEXT NOT NULL DEFAULT 'pendente',
-    id_usuario_responsavel INTEGER REFERENCES users(id)
+    id               SERIAL      PRIMARY KEY,
+    title            VARCHAR(255) NOT NULL,
+    description      TEXT         NOT NULL,
+    status           VARCHAR(50)  NOT NULL DEFAULT 'pendente'
+                         CHECK (status IN ('pendente', 'em_andamento', 'concluida')),
+    assigned_user_id INTEGER      REFERENCES users(id) ON DELETE SET NULL
 );
 ```
 
-As credenciais de conexão estão em [src/infraestrutura/banco/BancoDados.cpp](src/infraestrutura/banco/BancoDados.cpp).
+### Credenciais de conexão
+
+Por padrão a aplicação conecta em `localhost:5432 / taskdb / postgres`. Para sobrescrever, defina variáveis de ambiente antes de iniciar:
+
+```powershell
+$env:PG_HOST = "localhost"
+$env:PG_PORT = "5432"
+$env:PG_DB   = "taskdb"
+$env:PG_USER = "postgres"
+$env:PG_PASS = "sua_senha"
+.\build\TaskManager.exe
+```
+
+---
+
+## Documentação interativa (Swagger)
+
+Com o servidor rodando, abra no navegador:
+
+```
+http://localhost:18080/docs
+```
+
+Você verá a interface **Swagger UI** com todos os endpoints documentados. Para testar rotas protegidas diretamente pelo Swagger:
+
+1. Clique em **POST /login** → **Try it out** → preencha email e senha → **Execute**
+2. Copie o valor do campo `token` da resposta
+3. Clique no botão **Authorize** (cadeado no topo da página)
+4. Cole o token no campo **Value** e clique **Authorize**
+5. Agora qualquer rota com o ícone de cadeado enviará o header `Authorization: Bearer <token>` automaticamente
+
+O JSON bruto da spec OpenAPI 3.0 está em `http://localhost:18080/docs/openapi.json`.
+
+---
+
+## Testando a API manualmente
+
+### 1. Verificar saúde da API e conexão com o banco
+
+```powershell
+Invoke-RestMethod http://localhost:18080/health
+```
+
+Resposta esperada:
+```json
+{ "status": "ok", "database": "connected" }
+```
+
+### 2. Cadastrar um usuário
+
+```powershell
+Invoke-RestMethod http://localhost:18080/register `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body '{"nome":"Carlos Silva","email":"carlos@email.com","senha":"secreta123"}'
+```
+
+### 3. Fazer login e guardar o token
+
+```powershell
+$resp  = Invoke-RestMethod http://localhost:18080/login `
+           -Method POST `
+           -ContentType "application/json" `
+           -Body '{"email":"carlos@email.com","senha":"secreta123"}'
+$token = $resp.token
+```
+
+### 4. Criar uma tarefa (requer token)
+
+```powershell
+Invoke-RestMethod http://localhost:18080/tarefas `
+  -Method POST `
+  -ContentType "application/json" `
+  -Headers @{ Authorization = "Bearer $token" } `
+  -Body '{"titulo":"Implementar tela de login","descricao":"Criar o formulario com validacao","status":"pendente","idUsuarioResponsavel":1}'
+```
+
+### 5. Listar todas as tarefas
+
+```powershell
+Invoke-RestMethod http://localhost:18080/tarefas
+```
+
+### 6. Buscar tarefa por ID
+
+```powershell
+Invoke-RestMethod http://localhost:18080/tarefas/1
+```
+
+### 7. Atualizar uma tarefa (requer token)
+
+```powershell
+Invoke-RestMethod http://localhost:18080/tarefas/1 `
+  -Method PUT `
+  -ContentType "application/json" `
+  -Headers @{ Authorization = "Bearer $token" } `
+  -Body '{"titulo":"Implementar tela de login","descricao":"Concluido","status":"concluida","idUsuarioResponsavel":1}'
+```
+
+### 8. Remover uma tarefa (requer token)
+
+```powershell
+Invoke-RestMethod http://localhost:18080/tarefas/1 `
+  -Method DELETE `
+  -Headers @{ Authorization = "Bearer $token" }
+```
 
 ---
 
@@ -92,12 +200,16 @@ As credenciais de conexão estão em [src/infraestrutura/banco/BancoDados.cpp](s
 
 | Método | Rota | Autenticação | Descrição |
 |---|---|---|---|
+| `GET` | `/health` | Não | Verifica saúde da API e conexão com o banco |
 | `POST` | `/register` | Não | Cadastra novo usuário |
 | `POST` | `/login` | Não | Autentica e retorna token JWT |
 | `GET` | `/tarefas` | Não | Lista todas as tarefas |
 | `GET` | `/tarefas/:id` | Não | Busca tarefa por ID |
+| `POST` | `/tarefas` | JWT | Cria nova tarefa |
 | `PUT` | `/tarefas/:id` | JWT | Atualiza uma tarefa |
 | `DELETE` | `/tarefas/:id` | JWT | Remove uma tarefa |
+| `GET` | `/docs` | Não | Swagger UI |
+| `GET` | `/docs/openapi.json` | Não | Spec OpenAPI 3.0 |
 
 Rotas protegidas exigem o header:
 ```
@@ -209,8 +321,9 @@ API/
 │   │
 │   ├── apresentacao/
 │   │   └── controladores/
-│   │       ├── ControladorTarefa.hpp/.cpp    # Rotas HTTP de tarefas (GET/PUT/DELETE)
-│   │       └── ControladorUsuario.hpp/.cpp   # Rotas HTTP de autenticação (register/login)
+│   │       ├── ControladorTarefa.hpp/.cpp    # Rotas HTTP de tarefas (GET/POST/PUT/DELETE)
+│   │       ├── ControladorUsuario.hpp/.cpp   # Rotas HTTP de autenticação (register/login)
+│   │       └── ControladorDocs.hpp/.cpp      # Swagger UI e spec OpenAPI (/docs)
 │   │
 │   ├── nucleo/
 │   │   ├── dominio/
@@ -249,7 +362,7 @@ API/
 
 ```
 ┌─────────────────────────────────────────┐
-│         Apresentação (HTTP / Crow)       │  ControladorTarefa, ControladorUsuario
+│         Apresentação (HTTP / Crow)       │  ControladorTarefa, ControladorUsuario, ControladorDocs
 ├─────────────────────────────────────────┤
 │         Segurança                        │  JwtService, MiddlewareJwt
 ├─────────────────────────────────────────┤

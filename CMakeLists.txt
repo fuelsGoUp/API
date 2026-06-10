@@ -14,6 +14,7 @@ add_executable(TaskManager
     main.cpp
     src/apresentacao/controladores/ControladorTarefa.cpp
     src/apresentacao/controladores/ControladorUsuario.cpp
+    src/apresentacao/controladores/ControladorDocs.cpp
     src/nucleo/aplicacao/servicos/ServicoTarefa.cpp
     src/nucleo/aplicacao/servicos/ServicoUsuario.cpp
     src/infraestrutura/banco/BancoDados.cpp
@@ -28,9 +29,17 @@ target_include_directories(TaskManager PRIVATE src)
 target_link_libraries(TaskManager
     PRIVATE
     Crow::Crow
-    libpqxx::pqxx
     jwt-cpp::jwt-cpp
     spdlog::spdlog
+    libpqxx::pqxx
+    # libpgcommon (transitive via libpq) depends on libpgport symbols, but GNU
+    # ld processes archives left-to-right: pgport appears before pgcommon so its
+    # symbols are not yet "demanded". --whole-archive forces all pgport symbols
+    # in before pgcommon is scanned. --allow-multiple-definition silences the
+    # duplicate getopt/getopt_long between libpgport and libmingwex.
+    -Wl,--whole-archive
+    "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-mingw-static/lib/libpgport.a"
+    -Wl,--no-whole-archive,--allow-multiple-definition
 )
 
 find_package(GTest CONFIG REQUIRED)

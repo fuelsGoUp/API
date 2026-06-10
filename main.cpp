@@ -11,6 +11,7 @@
 
 #include "apresentacao/controladores/ControladorTarefa.hpp"
 #include "apresentacao/controladores/ControladorUsuario.hpp"
+#include "apresentacao/controladores/ControladorDocs.hpp"
 
 #include "seguranca/JwtService.hpp"
 #include "seguranca/MiddlewareJwt.hpp"
@@ -39,8 +40,29 @@ int main()
         ControladorTarefa  controladorTarefa(servicoTarefa, middlewareJwt);
         ControladorUsuario controladorUsuario(servicoUsuario, jwtService);
 
+        ControladorDocs controladorDocs;
+
         controladorTarefa.registrarRotas(app);
         controladorUsuario.registrarRotas(app);
+        controladorDocs.registrarRotas(app);
+
+        CROW_ROUTE(app, "/health")
+        ([&banco]()
+        {
+            crow::json::wvalue res;
+            if (banco.testarConexao())
+            {
+                res["status"]   = "ok";
+                res["database"] = "connected";
+                return crow::response(200, res);
+            }
+            else
+            {
+                res["status"]   = "error";
+                res["database"] = "disconnected";
+                return crow::response(503, res);
+            }
+        });
 
         Logger::info("Servidor escutando na porta 18080");
 
